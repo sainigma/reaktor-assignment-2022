@@ -18,7 +18,7 @@ let config = {
   ]
 }
 
-if (buildMode === 'dev' || !buildMode) {
+if (buildMode === 'watch' || !buildMode) {
   console.log("Development mode")
   config.mode = 'development'
   config.devServer = {
@@ -26,7 +26,12 @@ if (buildMode === 'dev' || !buildMode) {
       directory: path.resolve(__dirname, 'build')
     },
     compress: false,
-    port: 8000
+    port: 8000,
+    proxy: {
+      '/reaktor': {
+        target: 'http://localhost:8010/',
+      },
+    }
   }
 } else {
   console.log("Production mode")
