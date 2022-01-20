@@ -1,3 +1,5 @@
+import { Player } from "../entities/player"
+
 export class Players {
   constructor() {
     this.players = new Map()
@@ -9,5 +11,12 @@ export class Players {
     } else {
       this.players.set(playerName, new Player(playerName, gameId))
     }
+  }
+
+  getPlayer(playerName) {
+    if (this.players.has(playerName)) {
+      return this.players[playerName]
+    }
+    return undefined
   }
 }

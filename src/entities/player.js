@@ -1,4 +1,4 @@
-class Player {
+export class Player {
   constructor(name, gameId) {
     this.name = name
     this.games = [gameId]
