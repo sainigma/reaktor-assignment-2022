@@ -2,7 +2,6 @@ import { RPSJudge } from "../src/entities/rps_judge";
 
 test('SCISSORS should beat PAPER', () => {
   const rpsJudge = new RPSJudge()
-  console.log(rpsJudge.rpsEnumerator)
   const result = rpsJudge.getWinner('SCISSORS', 'PAPER')
   expect(result).toBe(0)
 })

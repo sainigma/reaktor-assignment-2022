@@ -8,7 +8,8 @@
     "watch": "webpack-dev-server",
     "build": "webpack",
     "proxy": "lcp --proxyPartial reaktor --proxyUrl https://bad-api-assignment.reaktor.com/",
-    "test": "jest --verbose"
+    "test": "jest --verbose",
+    "coverage": "jest --coverage"
   },
   "author": "Kari Suominen",
   "license": "ISC",
