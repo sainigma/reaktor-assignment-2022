@@ -1,5 +1,8 @@
 export class GameResult {
-  constructor(playerA, playerAPlayed, playerB, playerBPlayed, timestamp) {
-    this.players = [playerA, playerB]
+  constructor(playerA, playerB, gameState, timestamp) {
+    this.players = [playerA.name, playerB.name]
+    this.played = [playerA.played, playerB.played]
+    this.gameState = gameState
+    this.timestamp = timestamp
   }
 }

@@ -1,16 +1,12 @@
-import { RPSHistory } from "./utils/json_requester"
-import { Players } from "./repositories/players"
-
+import { RPSHistory } from "./services/rps_history"
 
 const init = () => {
   const target = document.getElementById("asd")
   target.innerHTML = "Webpack toimii"
   const rpsHistory = new RPSHistory('./reaktor/rps/history')
-  const players = new Players()
+  rpsHistory.fetchPage()
   window.test = () => {
-    rpsHistory.pages.forEach(page => {
-      players.appendHistory(page['data'])
-    })
+    console.log(rpsHistory.pages)
   }
 }
 

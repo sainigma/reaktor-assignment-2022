@@ -13,15 +13,19 @@ export class RPSJudge {
     }
   }
 
-  getWinner(playedA, playedB) {
+  static isPlayValid(played) {
+    return rpsKeywords.includes(played)
+  }
+
+  playerAWon(playedA, playedB) {
     if (!this._rpsEnumerator.has(playedA) || !this._rpsEnumerator.has(playedB)) {
-      return EvalError
+      return SyntaxError
     }
     if (playedA === playedB) {
       return -1
     } else if (this._rpsEnumerator.get(playedA) === playedB) {
-      return 0
+      return 1
     }
-    return 1
+    return 0
   }
 }

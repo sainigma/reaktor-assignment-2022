@@ -5,12 +5,16 @@ export class Players {
     this.players = new Map()
   }
 
-  append(playerName, gameId) {
-    if (this.players.has(playerName)) {
-      this.players[playerName].append(gameId)
-    } else {
-      this.players.set(playerName, new Player(playerName, gameId))
+  append(player, gameId) {
+    if (!Player.isPlayerValid(player)) {
+      return SyntaxError
     }
+    if (this.players.has(player.name)) {
+      this.players.get(player.name).append(gameId)
+    } else {
+      this.players.set(player.name, new Player(player.name, gameId))
+    }
+    return true
   }
 
   getPlayer(playerName) {

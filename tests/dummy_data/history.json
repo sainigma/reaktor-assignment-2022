@@ -1,0 +1,7 @@
+{
+  "cursor":"/rps/history?=TS_NOBON_-2q",
+  "data":[
+    {"type":"GAME_RESULT", "gameId": "6f0b4999813f83919c7bd", "t": 1642662220888, "playerA":{"name":"Marjatta Hämäläinen","played":"ROCK"},"playerB":{"name":"Tellervo Mäkinen","played":"ROCK"}},
+    {"type":"GAME_RESULT", "gameId": "5f0b4999813f83919c7ba", "t": 1642662220887, "playerA":{"name":"Marjatta Hämäläinen","played":"PAPER"},"playerB":{"name":"Testi Henkilö","played":"ROCK"}}
+  ]
+}
