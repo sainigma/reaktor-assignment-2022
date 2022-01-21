@@ -12,6 +12,7 @@
   "author": "Kari Suominen",
   "license": "ISC",
   "dependencies": {
+    "@vscode/sqlite3": "^5.0.7",
     "axios": "^0.25.0",
     "cors": "^2.8.5",
     "dotenv": "^14.2.0",

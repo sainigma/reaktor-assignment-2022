@@ -1,13 +1,15 @@
-const GameResults = require("../repositories/game_results")
+const GameResults = require("../services/game_results")
 const invalidHistory = require("../tests/dummy_data/history_various_defects.json")
 const history = require("../tests/dummy_data/history.json")
-const { GamesService } = require("../services/games_service")
+const { GamesRepository } = require("../repositories/games_repository")
+const { Connection } = require("../utils/db_connection")
 
-let gamesService, gameResults
+let gamesRepository, gameResults
 
 beforeEach(() => {
-  gamesService = new GamesService()
-  gameResults = new GameResults(gamesService)
+  const connection = new Connection('./dummy.db')
+  gamesRepository = new GamesRepository(connection)
+  gameResults = new GameResults(gamesRepository)
 })
 
 test('ongoing games are added to games, but not to results', () => {
@@ -18,8 +20,8 @@ test('ongoing games are added to games, but not to results', () => {
     entryCopy.type = 'GAME_BEGIN'
     gameResults.append(entryCopy)
   })
-  expect(gamesService.games.size).toBe(historyLength)
-  expect(gamesService.results.size).toBe(0)
+  expect(gamesRepository.games.size).toBe(historyLength)
+  expect(gamesRepository.results.size).toBe(0)
 })
 
 test('valid data is added to repository', () => {
@@ -37,7 +39,7 @@ test('valid data is added to repository', () => {
   })
 
   expect(entriesAddedWithoutProblems).toBe(true)
-  expect(gamesService.results.size).toBe(historyLength)
+  expect(gamesRepository.results.size).toBe(historyLength)
 })
 
 test('invalid data throws SyntaxError', () => {
@@ -47,6 +49,6 @@ test('invalid data throws SyntaxError', () => {
       gameResults.append(data)
     }
     expect(method).toThrow(SyntaxError)
-    expect(gameResults.gamesService.games.size).toBe(0)
+    expect(gameResults.gamesRepository.games.size).toBe(0)
   })
 })

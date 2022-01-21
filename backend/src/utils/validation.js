@@ -9,6 +9,5 @@ const objectHasKeys = (data, keys) => {
 }
 
 module.exports = {
-  objectHasKeys,
-  kakka:5
+  objectHasKeys
 }

@@ -1,26 +1,26 @@
 const Player = require('../entities/player')
 const RPSJudge = require('../entities/rps_judge')
-const { objectHasKeys } = require('./../utils/validation')
+const { objectHasKeys } = require('../utils/validation')
 
-const gameResultKeys = ['type', 'gameId', 't', 'playerA', 'playerB']
-const { GamesServiceSingleton } = require('./../services/games_service')
-const defaultGamesService = GamesServiceSingleton
+const gameResultKeys = ['type', 'gameId', 'playerA', 'playerB']
+const { gamesRepositorySingleton } = require('../repositories/games_repository')
+const defaultGamesRepository = gamesRepositorySingleton
 
 class GameResults {
-  constructor(gamesService = defaultGamesService) {
-    this.gamesService = gamesService
+  constructor(gamesRepository = defaultGamesRepository) {
+    this.gamesRepository = gamesRepository
     this.judge = new RPSJudge()
   }
 
   _hasResult(gameId) {
-    return this.gamesService.hasGame(gameId, false)
+    return this.gamesRepository.hasResult(gameId)
   }
 
   _hasOngoing(gameId) {
-    return this.gamesService.hasGame(gameId, true)
+    return this.gamesRepository.hasGame(gameId)
   }
 
-  _validate(data, playerKeys = 2) {
+  _validate(data) {
     if (!objectHasKeys(data, gameResultKeys) || this._hasResult(data.gameId)) {
       return false
     }
@@ -35,7 +35,7 @@ class GameResults {
   }
 
   _addGame(data) {
-    return this.gamesService.addGame(data.gameId, [data.playerA.name, data.playerB.name])
+    return this.gamesRepository.addGame(data.gameId, [data.playerA.name, data.playerB.name])
   }
 
   _endGame(data) {
@@ -43,7 +43,7 @@ class GameResults {
       const names = [data.playerA.name, data.playerB.name]
       const hands = [data.playerA.played, data.playerB.played]
       const winner = this.judge.getWinner(hands[0],hands[1])
-      return this.gamesService.addResult(data.gameId, hands, names, winner, data.t)
+      return this.gamesRepository.addResult(data.gameId, hands, names, winner, data.t)
     } catch (e) {
       return false
     }
@@ -68,7 +68,7 @@ class GameResults {
     }
 
     if (!this._endGame(data)) {
-      this.gamesService.removeGame(data.gameId)
+      this.gamesRepository.removeGame(data.gameId)
       throw new SyntaxError('Result failed validation')
     }
     return true 
@@ -85,9 +85,13 @@ class GameResults {
       result = this._addResult(data)
     }
     if (!result) {
-      this.gamesService.removeGame(data.gameId)
+      this.gamesRepository.removeGame(data.gameId)
       throw SyntaxError('failed validation')
     }
+  }
+
+  getResults() {
+    return this.gamesRepository.getResults()
   }
 }
 

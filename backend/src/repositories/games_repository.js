@@ -1,15 +1,10 @@
+const Player = require("../entities/player")
 const RPSJudge = require("../entities/rps_judge")
+const { connectionSingleton } = require("../utils/db_connection")
 
-class Player {
-  constuctor() {
-    this.games = 0
-    this.wins = 0
-    this.draws = 0
-  }
-}
-
-class GamesService {
-  constructor() {
+class GamesRepository {
+  constructor(db = connectionSingleton) {
+    this.db = db
     this.games = new Map()
     this.results = new Map()
     this.players = new Map()
@@ -40,7 +35,7 @@ class GamesService {
   }
 
   addResult(gameId, hands, playerNames, winner, timestamp) {
-    if (!this.hasGame(gameId) || this.hasResult(gameId)) {
+    if (!this.hasGame(gameId) || this.hasResult(gameId) || !timestamp) {
       return false
     }
 
@@ -69,9 +64,13 @@ class GamesService {
   hasGame(gameId) {
     return this.games.has(gameId)
   }
+
+  getResults(limit = 100) {
+    return Array.from(this.results.values())
+  }
 }
 
 module.exports = {
-  GamesServiceSingleton: new GamesService(),
-  GamesService
+  gamesRepositorySingleton: new GamesRepository(),
+  GamesRepository
 }

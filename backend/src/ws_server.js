@@ -1,4 +1,6 @@
 const WebSocket = require('ws')
+const GameResults = require('./repositories/game_results')
+const gameResults = new GameResults()
 
 module.exports = (server) => {
   const wsServerRX = new WebSocket('wss://bad-api-assignment.reaktor.com/rps/live')
@@ -6,13 +8,14 @@ module.exports = (server) => {
   }
   wsServerRX.onmessage = (event) => {
     try {
-      const jsonData = JSON.parse(event.data)
-      console.log(jsonData)
+      const jsonData = JSON.parse(JSON.parse(event.data))
+      gameResults.append(jsonData)
     } catch (error) {
       if (error instanceof SyntaxError) {
-        console.error(error.name)
+        console.log(event.data)
+        console.error(`${error.message}: ${event.data}`)
       } else {
-        console.error(error.message)
+        console.error(error.name)
       }
     }
   }

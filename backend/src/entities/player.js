@@ -4,7 +4,9 @@ const playerDataKeys = ['name', 'played']
 
 class Player {
   constructor() {
-    
+    this.games = 0
+    this.wins = 0
+    this.draws = 0
   }
 
   static isDataValid = (playerData, keys = 2) => {
