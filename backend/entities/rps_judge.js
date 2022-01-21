@@ -1,6 +1,6 @@
 const rpsKeywords = ['SCISSORS','PAPER','ROCK']
 
-export class RPSJudge {
+class RPSJudge {
   constructor(keywords = rpsKeywords) {
     this._rpsEnumerator = new Map()
     this._buildRPSEnumerator(keywords)
@@ -29,3 +29,5 @@ export class RPSJudge {
     return 0
   }
 }
+
+module.exports = RPSJudge

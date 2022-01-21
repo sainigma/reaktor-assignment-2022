@@ -4,17 +4,17 @@ import { GameResult } from "../entities/game_result"
 import { Players } from "./players"
 import { objectHasKeys } from "../utils/validation"
 
+const gameResultKeys = ['type', 'gameId', 't', 'playerA', 'playerB']
 
 export class GameResults {
   constructor() {
     this.games = new Map()
     this.players = new Players()
     this.judge = new RPSJudge()
-    this.gameResultKeys = ['type', 'gameId', 't', 'playerA', 'playerB']
   }
 
   addResult(data) {
-    if (!objectHasKeys(data, this.gameResultKeys) || data.type !== 'GAME_RESULT' || this.games.has(data.gameId)) {
+    if (!objectHasKeys(data, gameResultKeys) || data.type !== 'GAME_RESULT' || this.games.has(data.gameId)) {
       return SyntaxError
     }
     if (!Player.isPlayerValid(data.playerA) || !Player.isPlayerValid(data.playerB)) {

@@ -9,13 +9,21 @@ export class RPSHistory {
   async addPage(page) {
     this.pages.push(page)
     if ('cursor' in page) {
-      this.cursor = page['cursor'].split('?')[1]        
+      const newCursor = page['cursor'].split('?')[1]
+      if (newCursor === undefined) {
+        this.cursor = ''
+      } else {
+        this.cursor = newCursor
+      }
+    } else {
+      this.cursor = ''
     }
   }
 
   async fetchPage() {
     const page = await this.service.get(`${this.URI}?${this.cursor}`).then(response => response.json())
     await this.addPage(page)
+    return this.pages.at(-1)
   }
 }
 
