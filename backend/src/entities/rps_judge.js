@@ -1,25 +1,20 @@
 const rpsKeywords = ['SCISSORS','PAPER','ROCK']
 
 class RPSJudge {
-  constructor(keywords = rpsKeywords) {
+  constructor() {
     this._rpsEnumerator = new Map()
-    this._buildRPSEnumerator(keywords)
-  }
-
-  _buildRPSEnumerator(keywords) {
-    for (let i = 0; i < keywords.length; i++) {
-      const winsAgainst = i + 1 < keywords.length ? keywords[i + 1] : keywords[0]
-      this._rpsEnumerator.set(keywords[i], winsAgainst)
-    }
+    this._rpsEnumerator.set(rpsKeywords[0], rpsKeywords[1])
+    this._rpsEnumerator.set(rpsKeywords[1], rpsKeywords[2])
+    this._rpsEnumerator.set(rpsKeywords[2], rpsKeywords[0])
   }
 
   static isPlayValid(played) {
     return rpsKeywords.includes(played)
   }
 
-  playerAWon(playedA, playedB) {
+  getWinner(playedA, playedB) {
     if (!this._rpsEnumerator.has(playedA) || !this._rpsEnumerator.has(playedB)) {
-      return SyntaxError
+      throw new SyntaxError(`unidentified hands: ${playedA} ${playedB}`)
     }
     if (playedA === playedB) {
       return -1
