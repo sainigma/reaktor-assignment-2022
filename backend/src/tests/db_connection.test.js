@@ -1,7 +1,7 @@
 const fs = require('fs')
 const { Connection } = require("../utils/db_connection");
 
-let connection = new Connection('./dummy.db')
+const connection = new Connection('./dummy.db')
 
 beforeEach(async() => {
   await connection.purge()

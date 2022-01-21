@@ -70,7 +70,4 @@ class GamesRepository {
   }
 }
 
-module.exports = {
-  gamesRepositorySingleton: new GamesRepository(),
-  GamesRepository
-}
+module.exports = GamesRepository

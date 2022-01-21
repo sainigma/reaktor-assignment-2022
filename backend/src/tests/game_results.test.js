@@ -1,18 +1,20 @@
 const GameResults = require("../services/game_results")
 const invalidHistory = require("../tests/dummy_data/history_various_defects.json")
 const history = require("../tests/dummy_data/history.json")
-const { GamesRepository } = require("../repositories/games_repository")
+const GamesRepository = require("../repositories/games_repository")
 const { Connection } = require("../utils/db_connection")
 
 let gamesRepository, gameResults
+const connection = new Connection('./dummy.db')
 
-beforeEach(() => {
-  const connection = new Connection('./dummy.db')
+beforeEach(async() => {
+  await connection.purge()
+  await connection.init()
   gamesRepository = new GamesRepository(connection)
   gameResults = new GameResults(gamesRepository)
 })
 
-test('ongoing games are added to games, but not to results', () => {
+test('ongoing games are added to games, but not to results', async() => {
   const historyLength = history.data.length
 
   history.data.forEach(entry => {
@@ -24,7 +26,7 @@ test('ongoing games are added to games, but not to results', () => {
   expect(gamesRepository.results.size).toBe(0)
 })
 
-test('valid data is added to repository', () => {
+test('valid data is added to repository', async() => {
   const historyLength = history.data.length
 
   let entriesAddedWithoutProblems = true
@@ -42,7 +44,7 @@ test('valid data is added to repository', () => {
   expect(gamesRepository.results.size).toBe(historyLength)
 })
 
-test('invalid data throws SyntaxError', () => {
+test('invalid data throws SyntaxError', async() => {
   const gameResults = new GameResults()
   invalidHistory.data.forEach(data => {
     const method = () => {
@@ -51,4 +53,8 @@ test('invalid data throws SyntaxError', () => {
     expect(method).toThrow(SyntaxError)
     expect(gameResults.gamesRepository.games.size).toBe(0)
   })
+})
+
+afterAll(() => {
+  connection.purge()
 })

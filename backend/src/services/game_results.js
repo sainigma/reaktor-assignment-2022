@@ -3,8 +3,8 @@ const RPSJudge = require('../entities/rps_judge')
 const { objectHasKeys } = require('../utils/validation')
 
 const gameResultKeys = ['type', 'gameId', 'playerA', 'playerB']
-const { gamesRepositorySingleton } = require('../repositories/games_repository')
-const defaultGamesRepository = gamesRepositorySingleton
+const GamesRepository = require('../repositories/games_repository')
+const defaultGamesRepository = new GamesRepository()
 
 class GameResults {
   constructor(gamesRepository = defaultGamesRepository) {
