@@ -9,13 +9,13 @@ test('SCISSORS should beat PAPER', () => {
 test('SCISSORS should lose to ROCK', () => {
   const rpsJudge = new RPSJudge()
   const result = rpsJudge.getWinner('SCISSORS', 'ROCK')
-  expect(result).toBe(0)
+  expect(result).toBe(2)
 })
 
 test('Same plays result to draw', () => {
   const rpsJudge = new RPSJudge()
   const result = rpsJudge.getWinner('ROCK', 'ROCK')
-  expect(result).toBe(-1)
+  expect(result).toBe(0)
 })
 
 test('Invalid key throws SyntaxError', () => {

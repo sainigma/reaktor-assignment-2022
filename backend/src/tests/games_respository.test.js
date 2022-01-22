@@ -34,6 +34,13 @@ test('results cannot be added if an ongoing game does not exists', async () => {
   expect(result).toBe(false)
 })
 
+test('players are added', async () => {
+  await gamesRepository.addPlayer('Testi Henkilö')
+  const result = await gamesRepository.getPlayer('Testi Henkilö')
+  expect(result.length).toBe(1)
+  expect(result[0].id).toBe('Testi Henkilö')
+})
+
 afterAll(async() => {
   connection.purge()
 })

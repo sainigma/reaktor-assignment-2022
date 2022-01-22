@@ -3,11 +3,7 @@ const { objectHasKeys } = require("../utils/validation")
 const playerDataKeys = ['name', 'played']
 
 class Player {
-  constructor() {
-    this.games = 0
-    this.wins = 0
-    this.draws = 0
-  }
+  constructor() {}
 
   static isDataValid = (playerData, keys = 2) => {
     if (keys == 2) {

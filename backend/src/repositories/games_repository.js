@@ -5,14 +5,20 @@ const { connectionSingleton } = require("../utils/db_connection")
 class GamesRepository {
   constructor(db = connectionSingleton) {
     this.db = db
-    this.players = new Map()
   }
 
-  addPlayer(playerName) {
-    if (this.players.has(playerName)) {
+  async addPlayer(playerName) {
+    return await this.db.query('insert or ignore into Players (id) values (?)', [playerName])
+  }
+
+  async updateHand(playerName, hand) {
+    const dbKeywords = ['scissors', 'papers', 'rocks']
+    const keyword = dbKeywords[RPSJudge.getKeywordIndex(hand)]
+    if (keyword == undefined) {
       return
     }
-    this.players.set(playerName, new Player())
+    const query = `update Players set ${keyword} = ${keyword} + 1 where id = ?`
+    return await this.db.query(query, [playerName])
   }
 
   async addGame(gameId, playerNames) {
@@ -20,8 +26,8 @@ class GamesRepository {
     if (gameExists) {
       return false
     }
-    this.addPlayer(playerNames[0])
-    this.addPlayer(playerNames[1])
+    await this.addPlayer(playerNames[0])
+    await this.addPlayer(playerNames[1])
     await this.db.query(
       'insert into Games (id, player1, player2, ongoing) values (?, ?, ?, ?)', 
       [gameId, playerNames[0], playerNames[1], 1]
@@ -54,16 +60,25 @@ class GamesRepository {
       'insert into Results (id, hand1, hand2, winner, t) values (?, ?, ?, ?, ?)', 
       [gameId, hands[0], hands[1], winner, timestamp]
     )
+    
+    await this.db.query('update Players set games = games + 1 where id in (?, ?)', playerNames)
+    
+    await this.db.query(
+      'update Players set games = 1 where id in (?, ?)', playerNames
+    )
+    
+    await this.updateHand(playerNames[0], hands[0])
+    await this.updateHand(playerNames[1], hands[1])
 
-    this.players.get(playerNames[0]).games++
-    this.players.get(playerNames[1]).games++
-    if (winner == -1) {
-      this.players.get(playerNames[0]).draws++
-      this.players.get(playerNames[1]).draws++
+    if (winner == 0) {
+      await this.db.query(
+        'update Players set draws = draws + 1 where id in (?, ?)', playerNames
+      )
     } else {
-      this.players.get(playerNames[winner]).wins++
+      await this.db.query(
+        'update Players set wins = wins + 1 where id = ?', [playerNames[winner - 1]]
+      )
     }
-
     return true
   }
 
@@ -88,7 +103,14 @@ class GamesRepository {
   }
 
   async getResults(limit = 100) {
-    const rows = await this.db.query('select * from Results')
+    const rows = await this.db.query(
+      'select r.id, r.winner, g.player1, g.player2, r.hand1, r.hand2 from Results r left join Games g on r.id = g.id order by r.t desc'
+    )
+    return rows
+  }
+
+  async getPlayer(name) {
+    const rows = await this.db.query('select * from Players where id = ?', [name])
     return rows
   }
 }

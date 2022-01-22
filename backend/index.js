@@ -10,7 +10,6 @@ const start = () => {
 }
 
 if (process.env.DEBUG == 1) {
-  console.log('moi')
   const { Connection } = require('./src/utils/db_connection')
   const connection = new Connection()
   connection.purge().then(() => {

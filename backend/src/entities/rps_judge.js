@@ -12,16 +12,20 @@ class RPSJudge {
     return rpsKeywords.includes(played)
   }
 
+  static getKeywordIndex(keyword) {
+    return rpsKeywords.indexOf(keyword)
+  }
+
   getWinner(playedA, playedB) {
     if (!this._rpsEnumerator.has(playedA) || !this._rpsEnumerator.has(playedB)) {
       throw new SyntaxError(`unidentified hands: ${playedA} ${playedB}`)
     }
     if (playedA === playedB) {
-      return -1
+      return 0
     } else if (this._rpsEnumerator.get(playedA) === playedB) {
       return 1
     }
-    return 0
+    return 2
   }
 }
 

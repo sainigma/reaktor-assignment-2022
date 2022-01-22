@@ -45,7 +45,8 @@ class GameResults {
       const hands = [data.playerA.played, data.playerB.played]
       const winner = this.judge.getWinner(hands[0],hands[1])
       return await this.gamesRepository.addResult(data.gameId, hands, names, winner, data.t)
-    } catch (e) {
+    } catch (err) {
+      console.error(err)
       return false
     }
   }
@@ -78,7 +79,6 @@ class GameResults {
   }
 
   async append(data) {
-    console.log(data)
     const dataIsValid = await this._validate(data)
     if (!dataIsValid) {
       throw new SyntaxError('failed data validation')
@@ -106,6 +106,10 @@ class GameResults {
 
   getResults(limit = 10) {
     return this.gamesRepository.getResults(limit)
+  }
+
+  getPlayer(name) {
+    return this.gamesRepository.getPlayer(name)
   }
 }
 
