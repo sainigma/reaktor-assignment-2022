@@ -1,32 +1,30 @@
-import { RPSHistory } from "./services/rps_history"
-import { GameResults } from "./repositories/game_results"
+import "./styles/ui.css"
+import UI from "./ui"
 
-const rpsHistory = new RPSHistory('./reaktor/rps/history')
-const gameResults = new GameResults()
+let ui
 
-const drawResults = () => {
-  const gamesList = Array.from(asd.games.values()).sort((first, other) => first.timestamp - other.timestamp)
-  console.log(gameResults.games.values())
+const startSocket = () => {
 }
 
-const parsePage = (page) => {
-  const data = page.data
-  for (let i = 0; i < data.length; i++) {
-    gameResults.addResult(data[i])
-  }
+const fetchOngoing = () => {
+
 }
 
-const fetchPages = async () => {
-  const page = await rpsHistory.fetchPage()
-  parsePage(page)
-  if (rpsHistory.cursor !== '') {
-    console.log(page)
-    setTimeout(fetchPages, 100)
-  }
+const fetchResults = () => {
+
+}
+
+const fetchTopPlayers = () => {
+
 }
 
 const init = async () => {
-  fetchPages()
+  ui = new UI()
+  
+  startSocket()
+
+
+  
 }
 
 window.onload = init

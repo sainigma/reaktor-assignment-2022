@@ -1,4 +1,5 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 const path = require('path')
 const buildMode = process.env.npm_lifecycle_event;
 
@@ -14,8 +15,21 @@ let config = {
     new HtmlWebpackPlugin({
       template: './public/index.html',
       filename: './index.html'
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: "./public/icons", to: "icons"}
+      ]
     })
-  ]
+  ],
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: ["style-loader", "css-loader"],
+      }
+    ]
+  }
 }
 
 if (buildMode === 'watch' || !buildMode) {

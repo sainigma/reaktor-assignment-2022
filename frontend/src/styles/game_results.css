@@ -1,0 +1,83 @@
+#game_results {
+  display: flex;
+  flex-flow: column;
+  overflow-y: scroll;
+}
+
+.game_result {
+  display: flex;
+  flex-flow: row;
+  height: 60px;
+  margin-top: 2%;
+  margin-left: auto;
+  margin-right: auto;
+  width: 95%;
+  background-color: #DAB785;
+  border-radius: 5px;
+  border: 2px solid black;
+}
+
+.player_name {
+  width: 20%;
+}
+
+.icon.vs {
+  background-image: url('/public/icons/vs.png');
+  z-index: 10;
+}
+
+.icon.vs.fire {
+  background-image: url('/public/icons/vs.gif');
+  z-index: 10;
+}
+
+.winner_true {
+  background-image: url('/public/icons/winner.png');
+}
+
+.winner_false {
+  background-image: url('/public/icons/loser.png');
+}
+
+.draw {
+  background-image: url('/public/icons/draw.png');
+}
+
+.hand.winner {
+  z-index: 11;
+  filter: grayscale(100%) brightness(70%) sepia(100%) hue-rotate(60deg) saturate(400%);
+}
+
+.hand.loser {
+  z-index: 9;
+  filter: grayscale(100%) brightness(40%) sepia(100%) hue-rotate(-50deg) saturate(200%);
+}
+
+.hand.scissors {
+  background-image: url('/public/icons/scissors.png');
+}
+
+.hand.rock {
+  background-image: url('/public/icons/rock.png');
+}
+
+.hand.paper {
+  background-image: url('/public/icons/paper.png');
+}
+
+.hand.right {
+  margin-right: -4%;
+}
+
+.hand.left {
+  margin-left: -4%;
+}
+
+.flip {
+  -moz-transform: scaleX(-1);
+  -o-transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+  filter: FlipH;
+  -ms-filter: "FlipH";
+}

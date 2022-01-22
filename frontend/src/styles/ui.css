@@ -1,0 +1,59 @@
+body {
+  background-color: #04395E;
+}
+
+.container {
+  display: flex;
+  flex-flow: column wrap;
+}
+
+.child {
+  margin: 1%;
+  margin-right: 0;
+  margin-bottom: 0;
+  flex-grow: 1;
+}
+
+.child:first-child, .child:nth-child(2) {
+  width: 70%;
+  height: 46%;
+}
+
+.child:last-child {
+  margin-left: 0;
+  width: 27%;
+  height: 100%;
+}
+
+#ui {
+  min-width: 720px;
+  width: 60%;
+  height: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.result {
+  background-color: #D5896F;
+  border-radius: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: #DAB785 #D5896F;
+}
+
+.left {
+  margin-right: auto;
+  margin-left: 2%;
+}
+
+.right {
+  margin-left: auto;
+  margin-right: 2%;
+}
+
+.icon {
+  margin-top: 5px;
+  width: 50px;
+  height: 50px;
+  background-position: center;
+  background-size: cover;
+}
