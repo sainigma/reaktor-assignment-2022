@@ -1,5 +1,5 @@
 const WebSocket = require('ws')
-const GameResults = require('./repositories/game_results')
+const GameResults = require('./services/game_results')
 const gameResults = new GameResults()
 
 module.exports = (server) => {
@@ -12,7 +12,6 @@ module.exports = (server) => {
       gameResults.append(jsonData)
     } catch (error) {
       if (error instanceof SyntaxError) {
-        console.log(event.data)
         console.error(`${error.message}: ${event.data}`)
       } else {
         console.error(error.name)

@@ -1,7 +1,6 @@
-const fs = require('fs')
 const { Connection } = require("../utils/db_connection");
 
-const connection = new Connection('./dummy.db')
+const connection = new Connection('./dummy_connection.db')
 
 beforeEach(async() => {
   await connection.purge()
@@ -27,6 +26,6 @@ test('insertation works', async () => {
   expect(result).toEqual([{id:1, value1: 213, value2: 'testing'}])
 })
 
-afterAll(() => {
+afterAll(async() => {
   connection.purge()
 })

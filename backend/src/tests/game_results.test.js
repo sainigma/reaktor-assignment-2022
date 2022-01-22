@@ -4,57 +4,69 @@ const history = require("../tests/dummy_data/history.json")
 const GamesRepository = require("../repositories/games_repository")
 const { Connection } = require("../utils/db_connection")
 
-let gamesRepository, gameResults
-const connection = new Connection('./dummy.db')
+const connection = new Connection('./dummy_gameresults.db')
+const gamesRepository = new GamesRepository(connection)
+const gameResults = new GameResults(gamesRepository)
 
 beforeEach(async() => {
   await connection.purge()
   await connection.init()
-  gamesRepository = new GamesRepository(connection)
-  gameResults = new GameResults(gamesRepository)
+})
+
+test('appending works', async() => {
+  const example = history.data[0]
+  const result = await gameResults.append(example)
+  expect(result).toBe(true)
+})
+
+test('game results are added to repository', async () => {
+  const historyLength = history.data.length
+
+  for (let i = 0; i < historyLength; i++) {
+    const entry = history.data[i]
+    const result = await gameResults.append(entry)
+    expect(result).toBe(true)
+  }
+  const results = await gameResults.getResults()
+  expect(results.length).toBe(historyLength)
 })
 
 test('ongoing games are added to games, but not to results', async() => {
   const historyLength = history.data.length
 
-  history.data.forEach(entry => {
-    let entryCopy = Object.assign({}, entry)
-    entryCopy.type = 'GAME_BEGIN'
-    gameResults.append(entryCopy)
-  })
-  expect(gamesRepository.games.size).toBe(historyLength)
-  expect(gamesRepository.results.size).toBe(0)
+  for (let i = 0; i < historyLength; i++) {
+    let entry = Object.assign({},history.data[i])
+    entry.type = 'GAME_BEGIN'
+    const result = await gameResults.append(entry)
+    expect(result).toBe(true)
+  }
+
+  const games = await gameResults.getGames()
+  expect(games.length).toBe(historyLength)
+
+  const results = await gameResults.getResults()
+  expect(results.length).toBe(0)
 })
 
-test('valid data is added to repository', async() => {
-  const historyLength = history.data.length
+test('invalid game results are not added to the repo', async () => {
+  const historyLength = invalidHistory.data.length
 
-  let entriesAddedWithoutProblems = true
-
-  history.data.forEach(entry => {
+  for (let i = 0; i < historyLength; i++) {
+    const entry = invalidHistory.data[i]
+    let result = false
     try {
-      gameResults.append(entry)
-    } catch (e) {
-      console.log(e)
-      entriesAddedWithoutProblems = false
-    }
-  })
+      result = await gameResults.append(entry)
+    } catch (e) {}
+    
+    expect(result).toBe(false)
+  }
+  const games = await gameResults.getGames()
+  expect(games.length).toBe(0)
 
-  expect(entriesAddedWithoutProblems).toBe(true)
-  expect(gamesRepository.results.size).toBe(historyLength)
+  const results = await gameResults.getResults()
+  expect(results.length).toBe(0)
 })
 
-test('invalid data throws SyntaxError', async() => {
-  const gameResults = new GameResults()
-  invalidHistory.data.forEach(data => {
-    const method = () => {
-      gameResults.append(data)
-    }
-    expect(method).toThrow(SyntaxError)
-    expect(gameResults.gamesRepository.games.size).toBe(0)
-  })
-})
-
-afterAll(() => {
+afterAll(async() => {
   connection.purge()
 })

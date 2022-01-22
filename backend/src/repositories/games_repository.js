@@ -5,8 +5,6 @@ const { connectionSingleton } = require("../utils/db_connection")
 class GamesRepository {
   constructor(db = connectionSingleton) {
     this.db = db
-    this.games = new Map()
-    this.results = new Map()
     this.players = new Map()
   }
 
@@ -17,33 +15,45 @@ class GamesRepository {
     this.players.set(playerName, new Player())
   }
 
-  addGame(gameId, playerNames) {
-    if (this.hasGame(gameId)) {
+  async addGame(gameId, playerNames) {
+    const gameExists = await this.hasGame(gameId)
+    if (gameExists) {
       return false
     }
     this.addPlayer(playerNames[0])
     this.addPlayer(playerNames[1])
-    this.games.set(gameId, {players: playerNames, ongoing:true})
+    await this.db.query(
+      'insert into Games (id, player1, player2, ongoing) values (?, ?, ?, ?)', 
+      [gameId, playerNames[0], playerNames[1], 1]
+    )
     return true
   }
 
-  removeGame(gameId) {
-    if (this.hasGame(gameId)) {
-      this.games.delete(gameId)
+  async removeGame(gameId) {
+    const gameExists = await this.hasGame(gameId)
+    if (gameExists) {
+      await this.db.query('delete from Games where id = ?', [gameId])
     }
     return true
   }
 
-  addResult(gameId, hands, playerNames, winner, timestamp) {
-    if (!this.hasGame(gameId) || this.hasResult(gameId) || !timestamp) {
+  async addResult(gameId, hands, playerNames, winner, timestamp) {
+    if (!timestamp) {
       return false
     }
 
-    const gameEntry = this.games.get(gameId)
-    gameEntry.ongoing = false
-    this.games.set(gameId, gameEntry)
+    const gameExists = await this.hasGame(gameId)
+    const resultExists = await this.hasResult(gameId)
+    if (!gameExists || resultExists) {
+      return false
+    }
 
-    this.results.set(gameId, {hands, winner, timestamp})
+    await this.db.query('update Games set ongoing = 0 where id = ?', [gameId])
+    
+    await this.db.query(
+      'insert into Results (id, hand1, hand2, winner, t) values (?, ?, ?, ?, ?)', 
+      [gameId, hands[0], hands[1], winner, timestamp]
+    )
 
     this.players.get(playerNames[0]).games++
     this.players.get(playerNames[1]).games++
@@ -57,16 +67,29 @@ class GamesRepository {
     return true
   }
 
-  hasResult(gameId) {
-    return this.results.has(gameId)
+  async hasResult(gameId) {
+    const rows = await this.db.query('select id from Results where id = ?', [gameId])
+    return rows.length > 0
   }
 
-  hasGame(gameId) {
-    return this.games.has(gameId)
+  async hasGame(gameId) {
+    const rows = await this.db.query('select id from Games where id = ?', [gameId])
+    return rows.length > 0
   }
 
-  getResults(limit = 100) {
-    return Array.from(this.results.values())
+  async getOngoing(limit = 100) {
+    const query = 'select * from games g where g.id not in (select r.id from Results r)'
+    return await this.db.query(query)
+  }
+
+  async getGames(limit = 100) {
+    const rows = await this.db.query('select * from Games')
+    return rows
+  }
+
+  async getResults(limit = 100) {
+    const rows = await this.db.query('select * from Results')
+    return rows
   }
 }
 
