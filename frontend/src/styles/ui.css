@@ -7,6 +7,10 @@ body {
   flex-flow: column wrap;
 }
 
+.container.rows {
+  flex-flow: row wrap;
+}
+
 .child {
   margin: 1%;
   margin-right: 0;

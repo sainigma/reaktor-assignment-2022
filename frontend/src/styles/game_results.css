@@ -23,7 +23,13 @@
 }
 
 .player_name {
+  display: flex;
   width: 20%;
+  height: 95%;
+  margin: auto;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 .icon.vs {
@@ -34,6 +40,8 @@
 .icon.vs.fire {
   background-image: url('/public/icons/vs.gif');
   z-index: 10;
+  margin-left: 40px;
+  margin-right: 40px;
 }
 
 .winner_true {
@@ -85,4 +93,9 @@
   transform: scaleX(-1);
   filter: FlipH;
   -ms-filter: "FlipH";
+}
+
+.player_name:hover {
+  cursor: pointer;
+  background-color: rgb(233, 229, 175);
 }

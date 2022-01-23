@@ -1,0 +1,36 @@
+.header, .subheader {
+  width: 100%;
+}
+
+.subcontainer {
+  width: 50%;
+}
+
+.subcontainer.hand {
+  position: relative;
+  height: 60px;
+}
+
+.subcontainer.hand > .icon {
+  position: absolute;
+}
+
+.subcontainer.hand > .first {
+  left: 5px;
+  z-index: 3;
+}
+
+.subcontainer.hand > .second {
+  left: 30px;
+  z-index: 2;
+}
+
+.subcontainer.hand > .third {
+  left: 55px;
+  z-index: 1;
+}
+
+.inline {
+  display: inline-flex;
+  flex-wrap: wrap;
+}

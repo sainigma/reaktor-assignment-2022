@@ -1,6 +1,6 @@
 import "./styles/ui.css"
 import UI from "./ui"
-
+import { fetchJSON } from './utils/fetcher'
 let ui
 
 const startSocket = () => {
@@ -23,12 +23,6 @@ const startSocket = () => {
   }
 }
 
-const fetchData = async(URI) => {
-  return await fetch(`/rps/${URI}`).then(response => {
-    return response.json()
-  })
-}
-
 const addData = (data, method) => {
   for (const i in data) {
     method(data[i])
@@ -40,13 +34,13 @@ const fetchTopPlayers = () => {
 }
 
 const fetchOngoing = () => {
-  fetchData('ongoing').then(data => {
+  fetchJSON('ongoing').then(data => {
     addData(data, ui.addOngoing.bind(ui))
   })
 }
 
 const fetchResults = () => {
-  fetchData('results').then(data => {
+  fetchJSON('results').then(data => {
     addData(data, ui.addResult.bind(ui))
   })
 }

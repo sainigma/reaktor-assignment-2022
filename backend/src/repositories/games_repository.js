@@ -64,10 +64,6 @@ class GamesRepository {
     
     await this.db.query('update Players set games = games + 1 where id in (?, ?)', playerNames)
     
-    await this.db.query(
-      'update Players set games = 1 where id in (?, ?)', playerNames
-    )
-    
     await this.updateHand(playerNames[0], hands[0])
     await this.updateHand(playerNames[1], hands[1])
 

@@ -1,6 +1,7 @@
 import OngoingGames from "./elements/ongoing"
 import PlayerStatistics from "./elements/player_statistics"
 import GameResults from "./elements/results"
+import { fetchJSON } from './utils/fetcher'
 
 export default class UI {
   constructor() {
@@ -15,9 +16,18 @@ export default class UI {
 
     this.playerStatistics = new PlayerStatistics(statistics)
 
-    //this.ongoingGames.addOngoing('testi', 'pelaaja1', 'pelaaja2')
-    //this.ongoingGames.removeOngoing('testi')
-    //this.gameResults.addResult(['Testi Henkilö', 'Henki Testilö'], ['rock', 'paper'], 2)
+    this.root.addEventListener("click", (element) => {
+      if (element.target.className == 'player_name') {
+        const name = element.target.innerText
+        fetchJSON(`players/${name}`).then(data => {
+          if (data.length > 0) {
+            data = data[0]
+            console.log(data)
+            this.playerStatistics.set(data.id, data.games, data.wins, data.draws, data.rocks, data.papers, data.scissors)
+          }
+        })
+      }
+    })
   }
 
   addResult(data) {
