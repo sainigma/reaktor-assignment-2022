@@ -1,4 +1,4 @@
-#game_results {
+#game_results, #ongoing_games {
   display: flex;
   flex-flow: column;
   overflow-y: scroll;
@@ -15,6 +15,11 @@
   background-color: #DAB785;
   border-radius: 5px;
   border: 2px solid black;
+}
+
+.stats {
+  flex-flow: column;
+  height: auto;
 }
 
 .player_name {

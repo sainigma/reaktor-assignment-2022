@@ -5,6 +5,8 @@ const { connectionSingleton } = require("../utils/db_connection")
 class GamesRepository {
   constructor(db = connectionSingleton) {
     this.db = db
+    this.ongoingCache = new Map()
+    this.resultsCache = new Map()
   }
 
   async addPlayer(playerName) {
@@ -29,9 +31,10 @@ class GamesRepository {
     await this.addPlayer(playerNames[0])
     await this.addPlayer(playerNames[1])
     await this.db.query(
-      'insert into Games (id, player1, player2, ongoing) values (?, ?, ?, ?)', 
-      [gameId, playerNames[0], playerNames[1], 1]
+      'insert into Games (id, player1, player2) values (?, ?, ?)', 
+      [gameId, playerNames[0], playerNames[1]]
     )
+    this.ongoingCache.set(gameId, {id: gameId, player1: playerNames[0], player2: playerNames[1]})
     return true
   }
 
@@ -47,14 +50,12 @@ class GamesRepository {
     if (!timestamp) {
       return false
     }
-
+    
     const gameExists = await this.hasGame(gameId)
     const resultExists = await this.hasResult(gameId)
     if (!gameExists || resultExists) {
       return false
     }
-
-    await this.db.query('update Games set ongoing = 0 where id = ?', [gameId])
     
     await this.db.query(
       'insert into Results (id, hand1, hand2, winner, t) values (?, ?, ?, ?, ?)', 
@@ -79,6 +80,10 @@ class GamesRepository {
         'update Players set wins = wins + 1 where id = ?', [playerNames[winner - 1]]
       )
     }
+
+    this.ongoingCache.delete(gameId)
+    this.resultsCache.set(gameId, {id: gameId, winner, player1: playerNames[0], player2: playerNames[1], hand1: hands[0], hand2: hands[1]})
+
     return true
   }
 
@@ -104,7 +109,7 @@ class GamesRepository {
 
   async getResults(limit = 100) {
     const rows = await this.db.query(
-      'select r.id, r.winner, g.player1, g.player2, r.hand1, r.hand2 from Results r left join Games g on r.id = g.id order by r.t desc'
+      'select r.id, r.winner, g.player1, g.player2, r.hand1, r.hand2 from Results r left join Games g on r.id = g.id order by r.t desc limit ?', [limit]
     )
     return rows
   }
@@ -112,6 +117,25 @@ class GamesRepository {
   async getPlayer(name) {
     const rows = await this.db.query('select * from Players where id = ?', [name])
     return rows
+  }
+
+  async getTopPlayers() {
+    const rows = await this.db.query('select * from Players order by 2 * wins + draws desc limit 10')
+    return rows
+  }
+
+  getCached(id, type) {
+    let cache
+    if (type == 'GAME_RESULT') {
+      cache = this.resultsCache
+    } else if (type == 'GAME_BEGIN') {
+      cache = this.ongoingCache
+    } else {
+      return
+    }
+    const result = cache.get(id)
+    cache.delete(id)
+    return result
   }
 }
 

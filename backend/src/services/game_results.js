@@ -111,6 +111,16 @@ class GameResults {
   getPlayer(name) {
     return this.gamesRepository.getPlayer(name)
   }
+
+  getTopPlayers() {
+    return this.gamesRepository.getTopPlayers()
+  }
+
+  getCached(data) {
+    const id = data.gameId
+    const type = data.type
+    return this.gamesRepository.getCached(id, type)
+  }
 }
 
 module.exports = GameResults

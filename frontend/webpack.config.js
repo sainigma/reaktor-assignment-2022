@@ -42,8 +42,8 @@ if (buildMode === 'watch' || !buildMode) {
     compress: false,
     port: 8000,
     proxy: {
-      '/reaktor': {
-        target: 'http://localhost:8010/',
+      '/rps': {
+        target: 'http://localhost:80/',
       },
     }
   }

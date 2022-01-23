@@ -40,12 +40,12 @@ body {
   scrollbar-color: #DAB785 #D5896F;
 }
 
-.left {
+.icon.left {
   margin-right: auto;
   margin-left: 2%;
 }
 
-.right {
+.icon.right {
   margin-left: auto;
   margin-right: 2%;
 }

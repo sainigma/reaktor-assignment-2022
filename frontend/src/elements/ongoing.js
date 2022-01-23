@@ -1,3 +1,5 @@
+import GameResults from "./results"
+
 export default class OngoingGames {
   constructor(parent) {
     this.root = document.createElement('div')
@@ -5,11 +7,10 @@ export default class OngoingGames {
     this.root.className = 'child result'
 
     parent.appendChild(this.root)
-    
     this.games = new Map()
   }
 
-  getInnerHtml(player1, player2) {
+  static getInnerHtml(player1, player2) {
     return `
     <div class='icon winner_false left'></div>
     <div class='player_name right'>${player1}</div>
@@ -22,14 +23,17 @@ export default class OngoingGames {
   addOngoing (id, player1, player2) {
     const div = document.createElement('div')
     div.className = 'game_result'
-    div.innerHTML = this.getInnerHtml(player1, player2)
+    div.innerHTML = OngoingGames.getInnerHtml(player1, player2)
     this.games.set(id, div)
     this.root.appendChild(div)
   }
 
-  removeOngoing (id) {
+  removeOngoing (id, players, hands, winner, time=0) {
     const div = this.games.get(id)
-    div.innerHTML += ': resolved!'
+    if (div === undefined) {
+      return
+    }
+    div.innerHTML = GameResults.getInnerHtml(players, hands, winner, time)
     //do animations etc
     setTimeout(() => {
       this.root.removeChild(div)
