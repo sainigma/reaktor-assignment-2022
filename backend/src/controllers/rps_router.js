@@ -1,5 +1,4 @@
 const rpsRouter = require('express').Router()
-const axios = require('axios')
 const GameResults = require('../services/game_results')
 const gameResults = new GameResults()
 
