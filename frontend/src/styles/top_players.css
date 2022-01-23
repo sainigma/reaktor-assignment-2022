@@ -1,0 +1,17 @@
+.player_name.top, .header.top {
+  position: relative;
+  display: inline-flex;
+  width: 100%;
+  justify-content: initial;
+  font-family: monospace;
+}
+
+.player_name.top :nth-child(2) {
+  position: absolute;
+  left: 25px;
+}
+
+.player_name.top :nth-child(3), .header.top :last-child {
+  position: absolute;
+  right: 10px;
+}

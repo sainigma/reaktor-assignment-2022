@@ -1,4 +1,5 @@
 body {
+  font-family: ui-monospace;
   background-color: #04395E;
 }
 
@@ -19,19 +20,19 @@ body {
 }
 
 .child:first-child, .child:nth-child(2) {
-  width: 70%;
+  width: 60%;
   height: 46%;
 }
 
 .child:last-child {
   margin-left: 0;
-  width: 27%;
+  width: 38%;
   height: 100%;
 }
 
 #ui {
   min-width: 720px;
-  width: 60%;
+  width: 50%;
   height: 100%;
   margin-left: auto;
   margin-right: auto;

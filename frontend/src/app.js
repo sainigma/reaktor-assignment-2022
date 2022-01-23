@@ -14,9 +14,10 @@ const startSocket = () => {
     const data = JSON.parse(event.data)
     if (data.winner !== undefined) {
       ui.removeOngoing(data)
+      fetchTopPlayers()
       setTimeout(() => {
         ui.addResult(data)
-      }, 5000)      
+      }, 1150)      
     } else {
       ui.addOngoing(data)
     }
@@ -30,7 +31,9 @@ const addData = (data, method) => {
 }
 
 const fetchTopPlayers = () => {
-
+  fetchJSON('players/top').then(data => {
+    ui.setTopPlayers(data)
+  })
 }
 
 const fetchOngoing = () => {
@@ -51,7 +54,7 @@ const init = async () => {
   startSocket()
   fetchOngoing()
   fetchResults()
-  
+  fetchTopPlayers()
 }
 
 window.onload = init

@@ -1,4 +1,5 @@
 import "./../styles/stats.css"
+import TopPlayers from "./top_players"
 
 export default class PlayerStatistics {
   constructor(parent) {
@@ -30,31 +31,32 @@ export default class PlayerStatistics {
     ].sort((first, other) => {
       return first.value < other.value
     })
-    console.log(hands)
 
     this.info.innerHTML = `
       <div class='container rows'>
         <div class='header'>Player statistics</div>
         <div class='subheader'>${name}</div>
         <div class='subcontainer inline'>
-          <div class='subcontainer'>games</div>
-          <div class='subcontainer'>${games}</div>
-          <div class='subcontainer'>victories</div>
-          <div class='subcontainer'>${wins}</div>
-          <div class='subcontainer'>draws</div>
-          <div class='subcontainer'>${draws}</div>
+          <table>
+            <tr><td>victories</td><td>${wins}</td></tr>
+            <tr><td>draws</td><td>${draws}</td></tr>
+            <tr><td>losses</td><td>${games - wins - draws}</td></tr>
+            <tr><td>games</td><td>${games}</td></tr>
+            <tr><td>W/L ratio</td><td>${TopPlayers.getRatio(games, wins, draws)}</td></tr>
+          </table>
         </div>
         <div class='subcontainer'>
-          <div class='subheader'>Prefers</div>
+          
           <div class='hand subcontainer'>
-            <div class='icon hand ${hands[0].name} first'></div>
-            <div class='icon hand ${hands[1].name} second'></div>
-            <div class='icon hand ${hands[2].name} third'></div>
+            <div class='combined hand'>
+              <div class='icon hand ${hands[0].name}'></div>
+              <div class='icon hand ${hands[1].name}'></div>
+              <div class='icon hand ${hands[2].name}'></div>
+            </div>
           </div>
-          <div class='subheader'>
-            ${getRatioString(hands[0].value)} / 
-            ${getRatioString(hands[1].value)} / 
-            ${getRatioString(hands[2].value)}
+          <div class='subheader ratios'>Prefers ${hands[0].name}</div>
+          <div class='subheader ratios'>
+            ${getRatioString(hands[0].value)}/${getRatioString(hands[1].value)}/${getRatioString(hands[2].value)}
           </div>
         </div>
       </div>

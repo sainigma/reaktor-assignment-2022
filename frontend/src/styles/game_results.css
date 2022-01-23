@@ -1,7 +1,56 @@
+@keyframes animate-flash {
+	from {
+    filter: brightness(1000%);
+	}
+	to {
+		filter: brightness(100%);
+	}
+}
+
+@keyframes animate-fade-out {
+	from {
+    transform: translate(0,0);
+    margin-bottom: initial;
+    opacity: 100%;
+    z-index: 1;
+	}
+	to {
+    transform: translate(0, 60px);
+    margin-bottom: -60px;
+		opacity: 0%;
+    z-index: 1;
+	}
+}
+
+@keyframes animate-prepend {
+  from {
+    margin-top: -60px;
+  }
+  to {
+    margin-top: initial;
+  }
+}
+
+@keyframes animate-append {
+  from {
+    opacity: 0%;
+    margin-top: 60px;
+  }
+  to {
+    opacity: initial;
+    margin-top: initial;
+  }
+}
+
+
 #game_results, #ongoing_games {
   display: flex;
   flex-flow: column;
   overflow-y: scroll;
+}
+
+#game_results {
+  margin-top: 0.5%;
 }
 
 .game_result {
@@ -15,6 +64,7 @@
   background-color: #DAB785;
   border-radius: 5px;
   border: 2px solid black;
+  z-index: 2;
 }
 
 .stats {

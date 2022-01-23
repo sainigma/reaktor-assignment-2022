@@ -13,9 +13,9 @@ export default class OngoingGames {
   static getInnerHtml(player1, player2) {
     return `
     <div class='icon winner_false left'></div>
-    <div class='player_name'>${player1}</div>
+    <div class='player_name' name='${player1}'>${player1}</div>
     <div class='icon vs fire'></div>
-    <div class='player_name'>${player2}</div>
+    <div class='player_name' name='${player2}'>${player2}</div>
     <div class='icon winner_false right flip'></div>
     `
   }
@@ -23,6 +23,7 @@ export default class OngoingGames {
   addOngoing (id, player1, player2) {
     const div = document.createElement('div')
     div.className = 'game_result'
+    div.style.animation = 'animate-append 0.5s linear'
     div.innerHTML = OngoingGames.getInnerHtml(player1, player2)
     this.games.set(id, div)
     this.root.appendChild(div)
@@ -34,10 +35,15 @@ export default class OngoingGames {
       return
     }
     div.innerHTML = GameResults.getInnerHtml(players, hands, winner, time)
-    //do animations etc
-    setTimeout(() => {
-      this.root.removeChild(div)
-      this.games.delete(id)
-    }, 5000)
+    div.style.animation = 'animate-flash 0.15s linear'
+    div.addEventListener('animationend', () => {
+      setTimeout(() => {
+        div.style.animation = 'animate-fade-out 0.5s linear'
+        div.addEventListener('animationend', () => {
+          this.root.removeChild(div)
+          this.games.delete(id)
+        })
+      }, 500)
+    })
   }
 }
