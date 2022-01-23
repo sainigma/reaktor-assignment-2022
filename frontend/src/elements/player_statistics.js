@@ -29,7 +29,7 @@ export default class PlayerStatistics {
       {name: 'paper', value: papers},
       {name: 'scissors', value: scissors}
     ].sort((first, other) => {
-      return first.value < other.value
+      return first.value < other.value ? 1 : -1
     })
 
     this.info.innerHTML = `

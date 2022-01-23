@@ -4,7 +4,7 @@ import { fetchJSON } from './utils/fetcher'
 let ui
 
 const startSocket = () => {
-  const socket = new WebSocket(`ws://${window.location.host}`)
+  const socket = new WebSocket(`ws://${window.location.host}/reaktor/`)
 
   socket.onopen = () => {
     console.log('connected')
