@@ -9,7 +9,7 @@ const start = () => {
   })
 }
 
-if (process.env.DEBUG == 1) {
+if (process.env.DEBUG == 0) {
   const { Connection } = require('./src/utils/db_connection')
   const connection = new Connection()
   connection.purge().then(() => {

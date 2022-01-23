@@ -4,7 +4,7 @@ import { fetchJSON } from './utils/fetcher'
 let ui
 
 const startSocket = () => {
-  const socket = new WebSocket(`ws://localhost/`)
+  const socket = new WebSocket(`ws://${window.location.host}`)
 
   socket.onopen = () => {
     console.log('connected')
@@ -31,7 +31,7 @@ const addData = (data, method) => {
 }
 
 const fetchTopPlayers = () => {
-  fetchJSON('players/top').then(data => {
+  fetchJSON(`players/top`).then(data => {
     ui.setTopPlayers(data)
   })
 }

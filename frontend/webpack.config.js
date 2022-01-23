@@ -3,6 +3,9 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const path = require('path')
 const buildMode = process.env.npm_lifecycle_event;
 
+
+const devBackendURL = 'localhost:80/'
+
 let config = {
   entry: {
     main: ['./src/app.js']
@@ -15,11 +18,6 @@ let config = {
     new HtmlWebpackPlugin({
       template: './public/index.html',
       filename: './index.html'
-    }),
-    new CopyWebpackPlugin({
-      patterns: [
-        { from: "./public/icons", to: "icons"}
-      ]
     })
   ],
   module: {
@@ -27,7 +25,7 @@ let config = {
       {
         test: /\.css$/i,
         use: ["style-loader", "css-loader"],
-      }
+      },
     ]
   }
 }
@@ -35,6 +33,26 @@ let config = {
 if (buildMode === 'watch' || !buildMode) {
   console.log("Development mode")
   config.mode = 'development'
+  config.module.rules.push(
+    {
+      test: /\.js$/,
+      loader: 'string-replace-loader',
+      options: {
+        search: '${window.location}',
+        replace: `http://${devBackendURL}`
+      }
+    }
+  )
+  config.module.rules.push(
+    {
+      test: /\.js$/,
+      loader: 'string-replace-loader',
+      options: {
+        search: '${window.location.host}',
+        replace: 'localhost'
+      }
+    }
+  )
   config.devServer = {
     static: {
       directory: path.resolve(__dirname, 'build')
@@ -43,7 +61,7 @@ if (buildMode === 'watch' || !buildMode) {
     port: 8000,
     proxy: {
       '/rps': {
-        target: 'http://localhost:80/',
+        target: `http://${devBackendURL}`,
       },
     }
   }
